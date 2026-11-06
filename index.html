@@ -9,18 +9,18 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(5px); }
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(10px); }
             15% { opacity: 1; transform: translateY(0); }
             85% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-5px); }
+            100% { opacity: 0; transform: translateY(-10px); }
         }
-        .payout-fade {
-            animation: fadeInOut 3s ease-in-out infinite;
+        .floating-payout {
+            animation: slideUpFade 4s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased pb-20">
 
     <!-- Top Banner / Header -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
@@ -63,16 +63,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Live Payout Ticker -->
-    <div class="bg-emerald-50 border-y border-emerald-100 py-3 px-4 text-center overflow-hidden">
-        <div class="max-w-6xl mx-auto flex items-center justify-center text-xs sm:text-sm font-medium text-emerald-800">
-            <span class="bg-emerald-600 text-white px-2 py-0.5 rounded text-xs font-bold uppercase mr-3 shrink-0">Live Payouts</span>
-            <div id="payout-ticker" class="payout-fade font-semibold text-emerald-950">
-                💸 Kelvin O. (🇰🇪 Kenya) earned <strong class="text-emerald-900">$42.00</strong> via M-Pesa
-            </div>
-        </div>
-    </div>
 
     <!-- About PesoChat / How It Works Section -->
     <section class="max-w-6xl mx-auto px-4 py-16 border-b border-slate-200">
@@ -339,6 +329,46 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating Bottom Payout Ticker -->
+    <div class="fixed bottom-4 left-4 z-50 pointer-events-none">
+        <div id="floating-ticker-card" class="floating-payout bg-slate-900/95 text-white border border-emerald-500/40 px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md flex items-center space-x-3 text-xs sm:text-sm">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+            </div>
+            <div>
+                <p id="ticker-text" class="font-medium text-slate-200">
+                    <strong class="text-emerald-400">Kofi</strong> from <span class="underline">Ghana</span> withdrew <strong class="text-white">$120</strong> via MTN MoMo
+                </p>
+                <span class="text-[10px] text-slate-400" id="ticker-time">2 seconds ago</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to cycle different country payouts -->
+    <script>
+        const payouts = [
+            { name: "Kofi", country: "Ghana", flag: "🇬🇭", amount: "$120", method: "MTN MoMo", time: "2 seconds ago" },
+            { name: "Kelvin O.", country: "Kenya", flag: "🇰🇪", amount: "$42", method: "M-Pesa", time: "just now" },
+            { name: "Chinedu", country: "Nigeria", flag: "🇳🇬", amount: "$85", method: "Bank Transfer", time: "4 seconds ago" },
+            { name: "Amina", country: "Tanzania", flag: "🇹🇿", amount: "$60", method: "Airtel Money", time: "1 second ago" },
+            { name: "Blessing", country: "Nigeria", flag: "🇳🇬", amount: "$150", method: "OPay", time: "3 seconds ago" },
+            { name: "Brian K.", country: "Kenya", flag: "🇰🇪", amount: "$30", method: "M-Pesa", time: "5 seconds ago" },
+            { name: "Akosua", country: "Ghana", flag: "🇬🇭", amount: "$95", method: "Vodafone Cash", time: "just now" },
+            { name: "David M.", country: "Uganda", flag: "🇺🇬", amount: "$70", method: "MTN MoMo", time: "3 seconds ago" }
+        ];
+
+        let index = 0;
+        const tickerText = document.getElementById('ticker-text');
+        const tickerTime = document.getElementById('ticker-time');
+
+        setInterval(() => {
+            index = (index + 1) % payouts.length;
+            const p = payouts[index];
+            tickerText.innerHTML = `<strong class="text-emerald-400">${p.name}</strong> from <span class="underline">${p.country} ${p.flag}</span> withdrew <strong class="text-white">${p.amount}</strong> via ${p.method}`;
+            tickerTime.innerText = p.time;
+        }, 3500);
+    </script>
 
 </body>
 </html>
