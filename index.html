@@ -338,36 +338,67 @@
             </div>
             <div>
                 <p id="ticker-text" class="font-medium text-slate-200">
-                    <strong class="text-emerald-400">Kofi</strong> from <span class="underline">Ghana</span> withdrew <strong class="text-white">$120</strong> via MTN MoMo
+                    <strong class="text-emerald-400">Kelvin O.</strong> from <span class="underline">Kenya 🇰🇪</span> withdrew <strong class="text-white">$42</strong> via M-Pesa
                 </p>
-                <span class="text-[10px] text-slate-400" id="ticker-time">2 seconds ago</span>
+                <span class="text-[10px] text-slate-400" id="ticker-time">just now</span>
             </div>
         </div>
     </div>
 
-    <!-- Script to cycle different country payouts -->
+    <!-- Script to infinitely loop through multiple diverse countries, flags and payout networks -->
     <script>
         const payouts = [
-            { name: "Kofi", country: "Ghana", flag: "🇬🇭", amount: "$120", method: "MTN MoMo", time: "2 seconds ago" },
-            { name: "Kelvin O.", country: "Kenya", flag: "🇰🇪", amount: "$42", method: "M-Pesa", time: "just now" },
-            { name: "Chinedu", country: "Nigeria", flag: "🇳🇬", amount: "$85", method: "Bank Transfer", time: "4 seconds ago" },
-            { name: "Amina", country: "Tanzania", flag: "🇹🇿", amount: "$60", method: "Airtel Money", time: "1 second ago" },
-            { name: "Blessing", country: "Nigeria", flag: "🇳🇬", amount: "$150", method: "OPay", time: "3 seconds ago" },
-            { name: "Brian K.", country: "Kenya", flag: "🇰🇪", amount: "$30", method: "M-Pesa", time: "5 seconds ago" },
-            { name: "Akosua", country: "Ghana", flag: "🇬🇭", amount: "$95", method: "Vodafone Cash", time: "just now" },
-            { name: "David M.", country: "Uganda", flag: "🇺🇬", amount: "$70", method: "MTN MoMo", time: "3 seconds ago" }
+            { name: "Kelvin O.", country: "Kenya", flag: "🇰🇪", amount: "$42", method: "M-Pesa" },
+            { name: "Kofi", country: "Ghana", flag: "🇬🇭", amount: "$120", method: "MTN MoMo" },
+            { name: "Chinedu", country: "Nigeria", flag: "🇳🇬", amount: "$85", method: "Bank Transfer" },
+            { name: "Amina", country: "Tanzania", flag: "🇹🇿", amount: "$60", method: "Airtel Money" },
+            { name: "Blessing", country: "Nigeria", flag: "🇳🇬", amount: "$150", method: "OPay" },
+            { name: "Brian K.", country: "Kenya", flag: "🇰🇪", amount: "$30", method: "M-Pesa" },
+            { name: "Akosua", country: "Ghana", flag: "🇬🇭", amount: "$95", method: "Vodafone Cash" },
+            { name: "David M.", country: "Uganda", flag: "🇺🇬", amount: "$70", method: "MTN MoMo" },
+            { name: "Mercy W.", country: "Kenya", flag: "🇰🇪", amount: "$110", method: "M-Pesa" },
+            { name: "Oluwaseun", country: "Nigeria", flag: "🇳🇬", amount: "$200", method: "Bank Transfer" },
+            { name: "Kwame A.", country: "Ghana", flag: "🇬🇭", amount: "$65", method: "MTN MoMo" },
+            { name: "Baraka J.", country: "Tanzania", flag: "🇹🇿", amount: "$45", method: "Tigo Pesa" },
+            { name: "Sharon N.", country: "Uganda", flag: "🇺🇬", amount: "$80", method: "Airtel Money" },
+            { name: "Emmanuel P.", country: "Nigeria", flag: "🇳🇬", amount: "$135", method: "Palmpay" },
+            { name: "Faith M.", country: "Kenya", flag: "🇰🇪", amount: "$55", method: "M-Pesa" },
+            { name: "Yaw B.", country: "Ghana", flag: "🇬🇭", amount: "$175", method: "MTN MoMo" },
+            { name: "Hassan M.", country: "Tanzania", flag: "🇹🇿", amount: "$50", method: "AzamPesa" },
+            { name: "Joy N.", country: "Nigeria", flag: "🇳🇬", amount: "$140", method: "Kuda Bank" },
+            { name: "Ian K.", country: "Kenya", flag: "🇰🇪", amount: "$35", method: "M-Pesa" },
+            { name: "Abena S.", country: "Ghana", flag: "🇬🇭", amount: "$105", method: "MTN MoMo" },
+            { name: "Jean Claude", country: "Rwanda", flag: "🇷🇼", amount: "$90", method: "MTN MoMo" },
+            { name: "Jean-Pierre", country: "Cameroon", flag: "🇨🇲", amount: "$115", method: "Orange Money" },
+            { name: "Fatoumata", country: "Senegal", flag: "🇸🇳", amount: "$75", method: "Wave" },
+            { name: "Thabo M.", country: "South Africa", flag: "🇿🇦", amount: "$220", method: "Capitec Bank" },
+            { name: "Nomusa", country: "South Africa", flag: "🇿🇦", amount: "$130", method: "FNB eWallet" },
+            { name: "Tendai", country: "Zimbabwe", flag: "🇿🇼", amount: "$65", method: "Ecocash" },
+            { name: "Patrice", country: "DR Congo", flag: "🇨🇩", amount: "$95", method: "Airtel Money" },
+            { name: "Tariq B.", country: "Egypt", flag: "🇪🇬", amount: "$180", method: "Vodafone Cash" },
+            { name: "Youssef", country: "Morocco", flag: "🇲🇦", amount: "$145", method: "Bank Transfer" },
+            { name: "Kwesi", country: "Ghana", flag: "🇬🇭", amount: "$160", method: "MTN MoMo" }
         ];
 
-        let index = 0;
         const tickerText = document.getElementById('ticker-text');
         const tickerTime = document.getElementById('ticker-time');
+        const tickerCard = document.getElementById('floating-ticker-card');
+        const timeAgoOptions = ["just now", "1 second ago", "2 seconds ago", "3 seconds ago"];
 
-        setInterval(() => {
-            index = (index + 1) % payouts.length;
-            const p = payouts[index];
+        function showRandomPayout() {
+            tickerCard.style.animation = 'none';
+            tickerCard.offsetHeight; // Triggers reflow for smooth infinite animation cycling
+            tickerCard.style.animation = 'slideUpFade 4s ease-in-out infinite';
+
+            const randomIndex = Math.floor(Math.random() * payouts.length);
+            const p = payouts[randomIndex];
+            const randomTime = timeAgoOptions[Math.floor(Math.random() * timeAgoOptions.length)];
+
             tickerText.innerHTML = `<strong class="text-emerald-400">${p.name}</strong> from <span class="underline">${p.country} ${p.flag}</span> withdrew <strong class="text-white">${p.amount}</strong> via ${p.method}`;
-            tickerTime.innerText = p.time;
-        }, 3500);
+            tickerTime.innerText = randomTime;
+        }
+
+        setInterval(showRandomPayout, 4000);
     </script>
 
 </body>
